@@ -1,11 +1,8 @@
-
 import { sql } from "drizzle-orm";
 import { pgTable, serial, text, timestamp, customType } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-
-// Represents num dimensions of the embedding vector. Should match the dimensions of the embedding model used to generate the embeddings.
-const DIMENSIONS = 1536;
+import { DIMENSIONS } from "../../../../const";
 
 // PostgreSQL pgvector column type
 const vector = customType<{
