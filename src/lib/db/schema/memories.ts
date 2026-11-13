@@ -1,18 +1,8 @@
 import { sql } from "drizzle-orm";
-import { pgTable, serial, text, timestamp, customType } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, vector } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { DIMENSIONS } from "../../../../const";
-
-// PostgreSQL pgvector column type
-const vector = customType<{
-  data: number[];
-  driverData: string;
-}>({
-  dataType() {
-    return `vector(${DIMENSIONS})`;
-  },
-});
 
 // Stores the embeddings and content of the memories
 export const memories = pgTable("memories", {
@@ -20,7 +10,9 @@ export const memories = pgTable("memories", {
 
   content: text("content").notNull(),
 
-  embedding: vector("embedding").notNull(),
+  embedding: vector("embedding", { 
+    dimensions: DIMENSIONS })
+    .notNull(),
 
   createdAt: timestamp("created_at", {
     withTimezone: true,
