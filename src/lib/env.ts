@@ -11,7 +11,7 @@ export const env = createEnv({
             .enum(["development", "test", "production"])
             .default("development"),
         DATABASE_URL: z.string().min(1),
-        AI_GATEWAY_API_KEY: z.string().min(1),
+        AI_GATEWAY_API_KEY: z.string().optional(),
     },
     client: {},
     experimental__runtimeEnv: process.env,
