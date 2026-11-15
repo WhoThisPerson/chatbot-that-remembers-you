@@ -1,0 +1,67 @@
+name: CI Build
+on: 
+  push:
+    branches:
+      - main
+      - master
+    pull_request:
+      branches:
+        - main
+        - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: chatbot_user
+          POSTGRES_PASSWORD: chatbot_password
+          POSTGRES_DB: chatbot_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U chatbot_user -d chatbot_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://chatbot_user:chatbot_password@localhost:5432/chatbot_test
+      NODE_ENV: test
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Configure testing environment
+        run: |
+          echo "DATABASE_URL=$DATABASE_URL" > .env.test
+          echo "NODE_ENV=$NODE_ENV" >> .env.test
+      
+      - name: Enable pgvector extension
+        run: |
+          PGPASSWORD=chatbot_password psql \
+            -h localhost \
+            -U chatbot_user \
+            -d chatbot_test \
+            -c "CREATE EXTENSION IF NOT EXISTS vector;"
+      
+      - name: Run DB migrations
+        run: npm run db:migrate:test
+      
+      - name: Run tests
+        run: npm test
+      
+      - name: Run lint
+        run: npm run lint
