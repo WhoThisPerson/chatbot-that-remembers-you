@@ -1,6 +1,6 @@
 import { embedMany } from "ai";
 
-const embeddingModel = "openai/text-embedding-3-small";
+export const embeddingModel = "openai/text-embedding-3-small";
 
 /**
  * Generates vector embeddings for a list of facts
