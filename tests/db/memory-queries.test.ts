@@ -2,15 +2,15 @@ import { describe, it, expect } from "vitest";
 import { insertMemory, getMemories, deleteMemory } from "@/lib/db/queries/memory-queries";
 import { DIMENSIONS } from "../../const";
 
+const EMBEDDING = Array(DIMENSIONS).fill(0.1);
+
 describe("Memory queries", () => {
     it("should insert and retrieve a memory", async () => {
         const content = "I enjoy long walks on the beach and watching sunsets.";
 
-        const embedding = Array(DIMENSIONS).fill(0.1);
-
         const inserted = await insertMemory({
             content,
-            embedding,
+            embedding: EMBEDDING,
         });
 
         expect(inserted.content).toBe(content);
@@ -28,11 +28,9 @@ describe("Memory queries", () => {
     it("should delete a memory", async () => {
         const content = "Memory to be deleted";
 
-        const embedding = Array(DIMENSIONS).fill(0.2);
-
         const inserted = await insertMemory({
             content,
-            embedding,
+            embedding: EMBEDDING,
         });
 
         expect(inserted.content).toBe(content);
