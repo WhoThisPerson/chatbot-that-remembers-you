@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chatbot That Remembers You
 
-## Getting Started
+An AI-powered chatbot designed to retain useful information from previous conversations and use it to provide more personalized responses.
 
-First, run the development server:
+Unlike a traditional chatbot that primarily relies on the current conversation context, this project explores persistent memory using structured fact extraction, vector embeddings, and semantic retrieval.
+
+## Preview:
+![Chatbot Application](screenshots/main-ui.png)
+
+## Current Build Status:
+![Build Status](https://github.com/WhoThisPerson/chatbot-that-remembers-you/actions/workflows/ci-build.yaml/badge.svg)
+
+## Overview
+
+The application uses an LLM to identify useful facts from user messages, converts those facts into vector embeddings, and stores them in a PostgreSQL database with pgvector.
+
+When responding to future messages, the application can retrieve relevant stored memories through semantic similarity search and incorporate them into the chatbot's context.
+
+## Planned Features
+
+- **Fact Extraction:** Extract useful, structured information from user messages using an LLM.
+- **Embedding Generation:** Convert extracted facts into vector embeddings for semantic retrieval.
+- **Persistent Memory:** Store and manage user memories using PostgreSQL and pgvector.
+- **Semantic Search:** Retrieve relevant memories based on the meaning of incoming messages.
+- **Context-Aware Responses:** Incorporate retrieved memories into future chatbot responses.
+- **Streaming Responses:** Stream generated responses to the user.
+
+## Tech Stack
+
+- TypeScript
+- Next.js
+- Vercel AI SDK
+- PostgreSQL
+- pgvector
+- Drizzle ORM
+- Zod
+- Vitest
+- Docker
+
+## Project Status
+
+Currently under development. Backend functionality, including AI-powered fact extraction, embedding generation, and database operations, is being implemented and tested. Frontend development and end-to-end integration are planned.
+
+## Project Structure
+TBA
+
+## Running the Application
+
+### Prerequisites
+
+* Docker
+* Docker Compose
+
+### Start
+
+Clone the repository and start the application:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone git@github.com:[YOUR GITHUB USERNAME]/chatbot-that-remembers-you.git
+docker compose up -d
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run database migrations to create the development and testing database:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run db:migrate:dev
+npm run db:migrate:test
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application will then be available at:
 
-## Learn More
+* Database: `http://localhost:5432`
 
-To learn more about Next.js, take a look at the following resources:
+### Stop
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+docker compose down -v
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Testing
 
-## Deploy on Vercel
+Vitest is used to test AI and database functionality.
+They are also executed in GitHub Actions.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Run the backend tests via:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run test
+```
+
+The testing environment expects PostgreSQL test configuration separate from the primary application database
+
+## Motivation
+
+Project was created to become familiar with AI development and workings behind AI usage.
